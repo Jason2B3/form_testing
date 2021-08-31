@@ -1,13 +1,29 @@
-import React from "react"
+import React, { useState, useRef } from "react";
+import "./SimpleInput.css";
 const SimpleInput = (props) => {
-  const [enteredName, setEnteredName] = React.useState("");
-  const nameChangeHandler = function (e) {
-    setEnteredName(e.target.value);
-  };
+  const [validForm, setValidForm] = React.useState(9);
+  const inputRef = React.useRef();
+  // const nameChangeHandler = function (e) {
+  //   setEnteredName(e.target.value);
+  // };
   const submitHandler = function (e) {
     e.preventDefault();
-    console.log(enteredName)
+    let userInput = inputRef.current.value;
+    // If the suer submits nothing/whitespace, end this ƒ() early
+    if (userInput.trim() === "") {
+      setValidForm(false);
+      return;
+    }
+    setValidForm(true);
+    console.log(userInput); // access ref value here
   };
+  // ---------------------------------------
+  //^ Conditional JSX
+  let failureText = !validForm ? (
+    <p className="error-text">Name must not be empty</p>
+  ) : ( "" );
+  //^ Conditional Classes
+  const inputClass = !validForm ? "invalid" : "";
   return (
     <form>
       <div className="form-control">
@@ -15,12 +31,15 @@ const SimpleInput = (props) => {
         <input
           type="text"
           id="name"
-          value={enteredName}
-          onChange={nameChangeHandler}
+          ref={inputRef} // assign a ref attribute instead of a value one
+          className={inputClass}
         />
+        {failureText}
       </div>
       <div className="form-actions">
-        <button type="submit" onClick={submitHandler}>Submit</button>
+        <button type="submit" onClick={submitHandler}>
+          Submit
+        </button>
       </div>
     </form>
   );
