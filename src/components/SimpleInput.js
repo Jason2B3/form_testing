@@ -1,52 +1,28 @@
 import React, { useState, useRef, useCallback } from "react";
 import "./SimpleInput.css";
+import EmailField from "./EmailField";
+import NameField from "./NameField";
 const SimpleInput = (props) => {
   const [validForm, setValidForm] = React.useState("untouched");
-  const inputRef = React.useRef();
-
-  // prettier-ignore
-  const verifyInputFN = useCallback(function () {
-      // If input field is blank, validForm === false
-      let userInput = inputRef.current.value;
-      if (userInput.trim() === "") {
-        setValidForm(false);
-        return;
-      }
-      // If input field is not blank, validForm === true
-      setValidForm(true);
-  }, [inputRef]);
-
-  //% Validate the input vield when we hit the submit button, remove focus on it, and tap a key
-  // prettier-ignore
-  const blurTapHandler = useCallback((e) => verifyInputFN(),[verifyInputFN]);
 
   // prettier-ignore
   const submitHandler = useCallback(function (e) {
-      e.preventDefault();
-      verifyInputFN();
-  }, [verifyInputFN] );
-
-  // -------------------------------------------------------
-  // Conditional JSX and Classes
-  const inputClass = !validForm ? "invalid" : "";
-  // prettier-ignore
-  let failureText = !validForm ? (<p className="error-text">Name cannot be empty</p>) : ""
+    e.preventDefault();
+    // Check if NameField and EmailField are both valid
+    const nameValidity=0;
+    const emailValidity=0;
+    if (nameValidity && emailValidity) setValidForm(true);
+    else {
+      setValidForm(false);
+      alert("Fill in the highlighted fields")
+    }
+}, [] );
 
   return (
     <form>
-      <div className="form-control">
-        <label htmlFor="name">Your Name</label>
-        <input
-          type="text"
-          id="name"
-          ref={inputRef} // assign a ref attribute instead of a value one
-          onBlur={blurTapHandler}
-          onChange={blurTapHandler}
-          className={inputClass}
-        />
-        {failureText}
-      </div>
       <div className="form-actions">
+        <NameField />
+        <EmailField />
         <button type="submit" onClick={submitHandler}>
           Submit
         </button>

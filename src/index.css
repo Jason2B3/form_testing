@@ -79,10 +79,6 @@ button:active {
   border-color: #33059e;
 }
 
-.form-actions {
-  text-align: right;
-}
-
 .form-actions button {
   margin-left: 1rem;
 }
