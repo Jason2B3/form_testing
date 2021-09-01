@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback } from "react";
-import {useCustomContextHook} from "../GlobalContext"
+import { useCustomContextHook } from "../GlobalContext";
 
 export default function NameField() {
-  const { nameValid, setNameValid } = useCustomContextHook(); 
+  const { nameValid, setNameValid } = useCustomContextHook();
   const inputRef = React.useRef();
 
   // prettier-ignore
