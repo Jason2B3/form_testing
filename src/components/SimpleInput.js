@@ -1,29 +1,39 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import "./SimpleInput.css";
 const SimpleInput = (props) => {
-  const [validForm, setValidForm] = React.useState(9);
+  const [validForm, setValidForm] = React.useState("untouched");
   const inputRef = React.useRef();
-  // const nameChangeHandler = function (e) {
-  //   setEnteredName(e.target.value);
-  // };
-  const submitHandler = function (e) {
+
+  const verifyInputFN = useCallback(
+    (inp) => {
+      let userInput = inputRef.current.value;
+      if (userInput.trim() === "") {
+        setValidForm(false);
+        return;
+      }
+      setValidForm(true);
+      console.log(userInput);
+    },
+    [inputRef]
+  );
+
+  const submitHandler = useCallback((e) => {
     e.preventDefault();
-    let userInput = inputRef.current.value;
-    // If the suer submits nothing/whitespace, end this ƒ() early
-    if (userInput.trim() === "") {
-      setValidForm(false);
-      return;
-    }
-    setValidForm(true);
-    console.log(userInput); // access ref value here
-  };
-  // ---------------------------------------
+    verifyInputFN();
+  }, [verifyInputFN]);
+
+  const blurHandler = useCallback((e) => verifyInputFN(), [verifyInputFN]);
+
+  // -------------------------------------------------------
   //^ Conditional JSX
   let failureText = !validForm ? (
     <p className="error-text">Name must not be empty</p>
-  ) : ( "" );
+  ) : (
+    ""
+  );
   //^ Conditional Classes
   const inputClass = !validForm ? "invalid" : "";
+
   return (
     <form>
       <div className="form-control">
@@ -32,6 +42,7 @@ const SimpleInput = (props) => {
           type="text"
           id="name"
           ref={inputRef} // assign a ref attribute instead of a value one
+          onBlur={blurHandler}
           className={inputClass}
         />
         {failureText}
