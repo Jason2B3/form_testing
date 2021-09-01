@@ -4,35 +4,33 @@ const SimpleInput = (props) => {
   const [validForm, setValidForm] = React.useState("untouched");
   const inputRef = React.useRef();
 
-  const verifyInputFN = useCallback(
-    (inp) => {
+  // prettier-ignore
+  const verifyInputFN = useCallback(function () {
+      // If input field is blank, validForm === false
       let userInput = inputRef.current.value;
       if (userInput.trim() === "") {
         setValidForm(false);
         return;
       }
+      // If input field is not blank, validForm === true
       setValidForm(true);
-      console.log(userInput);
-    },
-    [inputRef]
-  );
+  }, [inputRef]);
 
-  const submitHandler = useCallback((e) => {
-    e.preventDefault();
-    verifyInputFN();
-  }, [verifyInputFN]);
+  //% Validate the input vield when we hit the submit button, remove focus on it, and tap a key
+  // prettier-ignore
+  const blurTapHandler = useCallback((e) => verifyInputFN(),[verifyInputFN]);
 
-  const blurHandler = useCallback((e) => verifyInputFN(), [verifyInputFN]);
+  // prettier-ignore
+  const submitHandler = useCallback(function (e) {
+      e.preventDefault();
+      verifyInputFN();
+  }, [verifyInputFN] );
 
   // -------------------------------------------------------
-  //^ Conditional JSX
-  let failureText = !validForm ? (
-    <p className="error-text">Name must not be empty</p>
-  ) : (
-    ""
-  );
-  //^ Conditional Classes
+  // Conditional JSX and Classes
   const inputClass = !validForm ? "invalid" : "";
+  // prettier-ignore
+  let failureText = !validForm ? (<p className="error-text">Name cannot be empty</p>) : ""
 
   return (
     <form>
@@ -42,7 +40,8 @@ const SimpleInput = (props) => {
           type="text"
           id="name"
           ref={inputRef} // assign a ref attribute instead of a value one
-          onBlur={blurHandler}
+          onBlur={blurTapHandler}
+          onChange={blurTapHandler}
           className={inputClass}
         />
         {failureText}
