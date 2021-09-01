@@ -1,7 +1,8 @@
 import React, { useState, useRef, useCallback } from "react";
+import {useCustomContextHook} from "../GlobalContext"
 
 export default function NameField() {
-  const [nameValid, setNameValid] = React.useState("untouched");
+  const { nameValid, setNameValid } = useCustomContextHook(); 
   const inputRef = React.useRef();
 
   // prettier-ignore
@@ -14,6 +15,7 @@ export default function NameField() {
       }
       // If input field is not blank, nameValid === true
       setNameValid(true);
+      return;
   }, [inputRef]);
 
   //% Validate the input vield when we hit the submit button, remove focus on it, and tap a key

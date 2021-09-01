@@ -3,7 +3,10 @@ const AAA = createContext();
 export const useCustomContextHook= () => useContext(AAA)
 
 export default function GlobalContext(props) {
-  const [theme, setTheme] = useState("dark");
-  const distribution = { theme, setTheme };
+  // Name and email input field states
+  const [nameValid, setNameValid] = React.useState("untouched");
+  const [emailValid, setEmailValid] = React.useState("untouched");
+
+  const distribution = { nameValid, setNameValid, emailValid, setEmailValid };
   return <AAA.Provider value={distribution}>{props.children}</AAA.Provider>;
 }

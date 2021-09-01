@@ -1,7 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import {useCustomContextHook} from "../GlobalContext"
 
 export default function EmailField() {
-  const [emailValid, setEmailValid] = React.useState("untouched");
+  const { emailValid, setEmailValid } = useCustomContextHook(); 
   const inputRef = React.useRef();
 
   // prettier-ignore
@@ -25,7 +26,7 @@ export default function EmailField() {
   // Conditional JSX and Classes
   const inputClass = !emailValid ? "invalid" : "";
   // prettier-ignore
-  let failureText = !emailValid ? (<p className="error-text">Name cannot be empty</p>) : ""
+  let failureText = !emailValid ? (<p className="error-text">Email cannot be empty</p>) : ""
   return (
     <div className="form-control">
       <label htmlFor="name">Email</label>
