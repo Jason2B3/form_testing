@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext } from "react";
 const AAA = createContext();
-export const useCustomContextHook= () => useContext(AAA)
+export const useCustomContextHook = () => useContext(AAA);
 
 export default function GlobalContext(props) {
   // Name and email input field states

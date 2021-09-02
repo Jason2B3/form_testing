@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 
-function useInput(initialValue) {
-  // Set up stateful variables to hold current value of the input field
-  const [value, setValue] = useState(initialValue);
-  // Function resets input value to whatever initVal was given as a parameter
-  const reset = () => setValue(initialValue); 
-  const bind = {
-    value,
-    onChange: function (e) {
-      // Sets stateful "value" variable equal to the event target's value
-      setValue(e.target.value);
-    },
-  };
-  return [value, bind, reset];
+function useInput(inputValid, verifyFN, label) {
+  const [inputValue, setInputValue] = useState("");
+
+  // Conditional JSX and Classes
+  const inputClass = !inputValid ? "invalid" : "";
+  // prettier-ignore
+  let failureText = !inputValid ? (<p className="error-text">The input above is not valid</p>) : ""
+  return (
+    <div className="form-control">
+      <label htmlFor="name">{label}</label>
+      <input
+        type="text"
+        id="name"
+        value={inputValue}
+        onBlur={(e) => verifyFN(e.target.value)}
+        onChange={(e) => {
+          setInputValue(e.target.value); //% delayed state update
+          verifyFN(e.target.value); //% verify email with event object instead of state
+        }}
+        className={inputClass}
+      />
+      {failureText}
+    </div>
+  );
 }
 
 export default useInput;
