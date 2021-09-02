@@ -1,27 +1,20 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useCustomContextHook } from "../GlobalContext";
 
 export default function NameField() {
   const { nameValid, setNameValid } = useCustomContextHook();
-  const inputRef = React.useRef();
+  const [inputValue, setInputValue] = useState("");
 
   // prettier-ignore
-  const verifyInputFN = useCallback(function () {
-      // If input field is blank, nameValid === false
-      let userInput = inputRef.current.value;
-      if (userInput.trim() === "") {
-        setNameValid(false);
+  const verifyName = useCallback(function (inputVal) {
+      //$ We rely on a parameter to verify the name, instead of the state which updates slowly
+      if (inputVal.trim() === "") {
+        setNameValid(false); // set to false if it's blank or whitespace
         return;
       }
-      // If input field is not blank, nameValid === true
       setNameValid(true);
       return;
-  }, [inputRef]);
-
-  //% Validate the input vield when we hit the submit button, remove focus on it, and tap a key
-  // prettier-ignore
-  const blurTapHandler = useCallback((e) => verifyInputFN(),[verifyInputFN]);
-
+  },[]);
   // -------------------------------------------------------
   // Conditional JSX and Classes
   const inputClass = !nameValid ? "invalid" : "";
@@ -33,9 +26,12 @@ export default function NameField() {
       <input
         type="text"
         id="name"
-        ref={inputRef} // assign a ref attribute instead of a value one
-        onBlur={blurTapHandler}
-        onChange={blurTapHandler}
+        value={inputValue}
+        onBlur={(e) => verifyName(e.target.value)}
+        onChange={(e) => {
+          setInputValue(e.target.value); //% delayed state update
+          verifyName(e.target.value); //% verify email with event object instead of state 
+        }}
         className={inputClass}
       />
       {failureText}
